@@ -1,0 +1,8 @@
+{
+  "app_name": "Account Service",
+  "db_host": "localhost",
+  "server_port": ":8080",
+  "db_port": 5432,
+  "db_name": "account_service_db",
+  "db_sslmode": "disable"
+}
