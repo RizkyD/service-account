@@ -54,7 +54,7 @@ func (r *nasabahRepository) GetNasabahForUpdate(ctx context.Context, tx pgx.Tx, 
 }
 
 func (r *nasabahRepository) UpdateSaldoNasabah(ctx context.Context, tx pgx.Tx, updateSaldoNasabahDTO *model.UpdateSaldoNasabahDTO) error {
-	query := fmt.Sprintf(`UPDATE nasabah SET saldo = $1 WHERE id = $2`)
+	query := fmt.Sprintf(`UPDATE nasabah SET saldo = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`)
 	_, err := tx.Exec(ctx, query, updateSaldoNasabahDTO.Saldo, updateSaldoNasabahDTO.ID)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

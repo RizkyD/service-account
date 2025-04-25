@@ -81,7 +81,7 @@ func (h *NasabahHandler) Tabung(c *fiber.Ctx) error {
 		return util.ErrorResponse(c, fiber.StatusInternalServerError, "Terdapat kesalahan internal pada server")
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"saldo": updateSaldoNasabahDTO.Saldo,
 	})
 }
@@ -115,7 +115,7 @@ func (h *NasabahHandler) Tarik(c *fiber.Ctx) error {
 		return util.ErrorResponse(c, fiber.StatusInternalServerError, "Terdapat kesalahan internal pada server")
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"saldo": updateSaldoNasabahDTO.Saldo,
 	})
 }
@@ -138,7 +138,7 @@ func (h *NasabahHandler) GetSaldo(c *fiber.Ctx) error {
 		return util.ErrorResponse(c, fiber.StatusInternalServerError, "Terdapat kesalahan internal pada server")
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"saldo": dataNasabah.Saldo,
 	})
 }

@@ -1,0 +1,35 @@
+services:
+  backend-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: # Username database
+      DB_PASSWORD: # Password database
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    ports:
+          - "5433:5432"
+    environment:
+      POSTGRES_DB: account_service_db
+      POSTGRES_USER: # Username database
+      POSTGRES_PASSWORD: # Password database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./internal/migration:/docker-entrypoint-initdb.d
+    healthcheck: # TAMBAH: Definisi healthcheck untuk service database
+          test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+          interval: 5s
+          timeout: 5s
+          retries: 5
+          start_period: 10s
+
+volumes:
+  db_data:
