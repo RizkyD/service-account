@@ -11,7 +11,8 @@ import (
 type TransactionService interface {
 	Create(ctx context.Context, dto *model.CreateTransactionDTO) (*model.Transaction, error)
 	GetByID(ctx context.Context, id int64) (*model.Transaction, error)
-	GetAll(ctx context.Context) ([]model.Transaction, error)
+	// GetAll retrieves transactions with the given limit and offset.
+	GetAll(ctx context.Context, limit, offset int) ([]model.Transaction, error)
 	Update(ctx context.Context, id int64, dto *model.UpdateTransactionDTO) error
 	Delete(ctx context.Context, id int64) error
 }
@@ -47,8 +48,8 @@ func (s *transactionService) GetByID(ctx context.Context, id int64) (*model.Tran
 	return tx, nil
 }
 
-func (s *transactionService) GetAll(ctx context.Context) ([]model.Transaction, error) {
-	return s.repo.GetAll(ctx)
+func (s *transactionService) GetAll(ctx context.Context, limit, offset int) ([]model.Transaction, error) {
+	return s.repo.GetAll(ctx, limit, offset)
 }
 
 func (s *transactionService) Update(ctx context.Context, id int64, dto *model.UpdateTransactionDTO) error {
