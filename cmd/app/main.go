@@ -34,6 +34,14 @@ func main() {
 	nasabahService := service.NewNasabahService(nasabahRepository, dbPool)
 	nasabahHandler := handler.NewNasabahHandler(nasabahService)
 
+	// initiate second database connection (reuse same URL for demo)
+	transactionDBPool := database.ConnectDB(cfg.DatabaseURL)
+	defer transactionDBPool.Close()
+
+	transactionRepository := repository.NewTransactionRepository(transactionDBPool)
+	transactionService := service.NewTransactionService(transactionRepository)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
+
 	//setup fiber
 	app := fiber.New()
 
@@ -41,7 +49,7 @@ func main() {
 	app.Use(middleware.ZerologRequestLogger)
 
 	//setup router
-	route.SetupRoutes(app, nasabahHandler)
+	route.SetupRoutes(app, nasabahHandler, transactionHandler)
 
 	zlog.Info().Str("port", cfg.ServerPort).Msgf("Starting server '%s'", cfg.AppName)
 	err := app.Listen(cfg.ServerPort)

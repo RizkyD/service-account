@@ -5,9 +5,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupRoutes(app *fiber.App, nasabahHandler *handler.NasabahHandler) {
+func SetupRoutes(app *fiber.App, nasabahHandler *handler.NasabahHandler, transactionHandler *handler.TransactionHandler) {
 	api := app.Group("/api/v1")
 	SetupNasabahRoutes(api, nasabahHandler)
+	SetupTransactionRoutes(api, transactionHandler)
 
 	api.Use(func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
