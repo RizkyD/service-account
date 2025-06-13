@@ -13,7 +13,10 @@ import (
 type TransactionRepository interface {
 	Create(ctx context.Context, tx *model.Transaction) error
 	GetByID(ctx context.Context, id int64) (*model.Transaction, error)
-	GetAll(ctx context.Context) ([]model.Transaction, error)
+	// GetAll returns a slice of transactions with pagination support.
+	// limit defines the maximum number of records to return.
+	// offset defines the starting point in the result set.
+	GetAll(ctx context.Context, limit, offset int) ([]model.Transaction, error)
 	Update(ctx context.Context, transaction *model.Transaction) error
 	Delete(ctx context.Context, id int64) error
 }
@@ -49,9 +52,9 @@ func (r *transactionRepository) GetByID(ctx context.Context, id int64) (*model.T
 	return &t, nil
 }
 
-func (r *transactionRepository) GetAll(ctx context.Context) ([]model.Transaction, error) {
-	query := `SELECT id, customer_id, transaction_at, transaction_amount FROM transactions`
-	rows, err := r.db.Query(ctx, query)
+func (r *transactionRepository) GetAll(ctx context.Context, limit, offset int) ([]model.Transaction, error) {
+	query := `SELECT id, customer_id, transaction_at, transaction_amount FROM transactions ORDER BY id LIMIT $1 OFFSET $2`
+	rows, err := r.db.Query(ctx, query, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("error querying transactions: %w", err)
 	}

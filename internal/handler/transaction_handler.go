@@ -56,7 +56,20 @@ func (h *TransactionHandler) GetByID(c *fiber.Ctx) error {
 }
 
 func (h *TransactionHandler) GetAll(c *fiber.Ctx) error {
-	trxs, err := h.service.GetAll(c.Context())
+	limitParam := c.Query("limit", "100")
+	offsetParam := c.Query("offset", "0")
+
+	limit, err := strconv.Atoi(limitParam)
+	if err != nil || limit <= 0 {
+		limit = 100
+	}
+
+	offset, err := strconv.Atoi(offsetParam)
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	trxs, err := h.service.GetAll(c.Context(), limit, offset)
 	if err != nil {
 		c.Locals("err", err)
 		return util.ErrorResponse(c, fiber.StatusInternalServerError, "Terjadi kesalahan")
